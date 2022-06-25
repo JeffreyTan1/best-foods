@@ -1,0 +1,9 @@
+{
+  "data": [
+    {"id": 1, "name": "Belles Hot Chicken", "img": "./belles.png"},
+    {"id": 2, "name": "Crisp", "img": "./crisp.png"},
+    {"id": 3, "name": "Natural History Bar", "img": "./naturalhistorybar.png"},
+    {"id": 4, "name": "Pokéd", "img": "./poked.png"},
+    {"id": 5, "name": "Subway", "img": "./subway.png"}
+  ]
+}
