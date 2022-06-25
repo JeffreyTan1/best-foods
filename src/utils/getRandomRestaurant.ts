@@ -1,4 +1,4 @@
-const MAX_RESTAURANTS_ID = 4;
+const MAX_RESTAURANTS_ID = 5;
 
 export const getRandomRestaurant: (notThisOne?: number) => number = (notThisOne?: number) => {
   const restaurantNumber = Math.floor(Math.random() * MAX_RESTAURANTS_ID) + 1;

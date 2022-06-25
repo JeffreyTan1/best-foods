@@ -1,34 +1,63 @@
 import { getOptionsForVote } from "@/utils/getRandomRestaurant";
 import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 interface ComparisonItemProps {
   title: string | number | undefined;
   image_path?: string;
 }
-const ComparisonItem = ({ title }: ComparisonItemProps) => {
-  return <div className="w-1/3 text-center">{title ? title : ``}</div>;
+const ComparisonItem = ({ title, image_path }: ComparisonItemProps) => {
+  return (
+    <div className="w-1/3 h-full flex flex-col justify-center">
+      {image_path && (
+        <div className="h-54 flex flex-col grow justify-center bg-white rounded-lg overflow-hidden">
+          <img src={image_path} alt="title" />
+        </div>
+      )}
+      <div className="p-2" />
+      <div className="text-center text-lg">{title}</div>
+    </div>
+  );
 };
 
 const Home: NextPage = () => {
-  const [first, setFirst] = useState<string | number | undefined>(undefined);
-  const [second, setSecond] = useState<string | number | undefined>(undefined);
+  const ids = useMemo(() => getOptionsForVote(), []);
+  const [first, second] = ids;
 
-  useEffect(() => {
-    const [f, s] = getOptionsForVote();
-    setFirst(f);
-    setSecond(s);
-  }, []);
+  const firstRestaurant = trpc.useQuery([
+    "get-restaurant-by-id",
+    { id: first },
+  ]);
+
+  const secondRestaurant = trpc.useQuery([
+    "get-restaurant-by-id",
+    { id: second },
+  ]);
+
+  if (firstRestaurant.isLoading || secondRestaurant.isLoading)
+    return (
+      <div className="h-screen w-screen flex flex-col justify-center items-center">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center">
       <div className="text-2xl">Which is better?</div>
       <div className="p-4" />
-      <div className="w-1/3 p-4 flex justify-between items-center border-2 rounded">
-        <ComparisonItem title={first} />
-        <ComparisonItem title="VS" />
-        <ComparisonItem title={second} />
+      <div className="min-w-[40%] m-4 p-8 flex justify-center items-center bg-slate-200 rounded-3xl shadow-2xl text-black font-semibold">
+        <ComparisonItem
+          title={firstRestaurant.data?.name}
+          image_path={firstRestaurant.data?.img}
+        />
+
+        <div className="w-1/3 text-center font-bold text-3xl">VS</div>
+
+        <ComparisonItem
+          title={secondRestaurant.data?.name}
+          image_path={secondRestaurant.data?.img}
+        />
       </div>
     </div>
   );
