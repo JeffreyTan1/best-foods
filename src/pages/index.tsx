@@ -4,8 +4,8 @@ import type { NextPage } from "next";
 import { useMemo } from "react";
 
 interface ComparisonItemProps {
-  title: string | number | undefined;
-  image_path?: string;
+  title: string;
+  image_path: string;
   id: number;
 }
 
@@ -50,7 +50,12 @@ const Home: NextPage = () => {
     { id: second },
   ]);
 
-  if (firstRestaurant.isLoading || secondRestaurant.isLoading) {
+  if (
+    firstRestaurant.isLoading ||
+    secondRestaurant.isLoading ||
+    !firstRestaurant.data ||
+    !secondRestaurant.data
+  ) {
     return (
       <div className="h-screen w-screen flex flex-col justify-center items-center">
         Loading...
@@ -64,9 +69,9 @@ const Home: NextPage = () => {
       <div className="p-4" />
       <div className="min-w-[40%] m-4 p-8 flex justify-center items-center bg-slate-200 rounded-3xl shadow-2x">
         <ComparisonItem
-          title={firstRestaurant.data?.name}
-          image_path={firstRestaurant.data?.image_path}
-          id={firstRestaurant.data?.id}
+          title={firstRestaurant.data.name}
+          image_path={firstRestaurant.data.image_path}
+          id={firstRestaurant.data.id}
         />
 
         <div className="w-1/3 text-center font-bold text-3xl text-black">
@@ -74,9 +79,9 @@ const Home: NextPage = () => {
         </div>
 
         <ComparisonItem
-          title={secondRestaurant.data?.name}
-          image_path={secondRestaurant.data?.image_path}
-          id={secondRestaurant.data?.id}
+          title={secondRestaurant.data.name}
+          image_path={secondRestaurant.data.image_path}
+          id={secondRestaurant.data.id}
         />
       </div>
     </div>
