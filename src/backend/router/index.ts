@@ -7,7 +7,14 @@ export const appRouter = trpc
   .query("get-restaurant-by-id", {
     input: z.object({ id: z.number() }),
     resolve({input}) {
-      return restaurants.data.find(restaurant => restaurant.id === input.id);
+      const restaurant = restaurants.data.find(restaurant => restaurant.id === input.id);
+      if(restaurant) {
+         return {
+          id: restaurant.id,
+          name: restaurant.name,
+          image_path: restaurant.img,
+        }
+      }
     }
   })
 // export type definition of API

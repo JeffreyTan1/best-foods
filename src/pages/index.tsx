@@ -6,17 +6,32 @@ import { useMemo } from "react";
 interface ComparisonItemProps {
   title: string | number | undefined;
   image_path?: string;
+  id: number;
 }
-const ComparisonItem = ({ title, image_path }: ComparisonItemProps) => {
+
+const voteForBetter = (selected: number) => {
+  // updateIds(selected);
+};
+
+const ComparisonItem = ({ title, image_path, id }: ComparisonItemProps) => {
   return (
-    <div className="w-1/3 h-full flex flex-col justify-center">
+    <div className="w-1/3 h-full flex flex-col justify-center items-center">
       {image_path && (
         <div className="h-54 flex flex-col grow justify-center bg-white rounded-lg overflow-hidden">
           <img src={image_path} alt="title" />
         </div>
       )}
       <div className="p-2" />
-      <div className="text-center text-lg">{title}</div>
+      <div className="text-center text-lg text-black font-semibold">
+        {title}
+      </div>
+      <div className="p-2" />
+      <button
+        className="bg-amber-600 rounded-lg w-2/3 py-2 px-4 font-bold"
+        onClick={() => voteForBetter(id)}
+      >
+        Better
+      </button>
     </div>
   );
 };
@@ -35,28 +50,33 @@ const Home: NextPage = () => {
     { id: second },
   ]);
 
-  if (firstRestaurant.isLoading || secondRestaurant.isLoading)
+  if (firstRestaurant.isLoading || secondRestaurant.isLoading) {
     return (
       <div className="h-screen w-screen flex flex-col justify-center items-center">
         Loading...
       </div>
     );
+  }
 
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center">
       <div className="text-2xl">Which is better?</div>
       <div className="p-4" />
-      <div className="min-w-[40%] m-4 p-8 flex justify-center items-center bg-slate-200 rounded-3xl shadow-2xl text-black font-semibold">
+      <div className="min-w-[40%] m-4 p-8 flex justify-center items-center bg-slate-200 rounded-3xl shadow-2x">
         <ComparisonItem
           title={firstRestaurant.data?.name}
-          image_path={firstRestaurant.data?.img}
+          image_path={firstRestaurant.data?.image_path}
+          id={firstRestaurant.data?.id}
         />
 
-        <div className="w-1/3 text-center font-bold text-3xl">VS</div>
+        <div className="w-1/3 text-center font-bold text-3xl text-black">
+          VS
+        </div>
 
         <ComparisonItem
           title={secondRestaurant.data?.name}
-          image_path={secondRestaurant.data?.img}
+          image_path={secondRestaurant.data?.image_path}
+          id={secondRestaurant.data?.id}
         />
       </div>
     </div>
